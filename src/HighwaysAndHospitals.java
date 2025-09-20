@@ -21,10 +21,123 @@ public class HighwaysAndHospitals {
 
         // If hospitals cost less than highways then (n) * hospital cost
         if (hospitalCost < highwayCost) {
-            return n * hospitalCost;
+            return (long) n * hospitalCost;
         }
 
-        // For each city have a list of its neighbors for easy access
+        // Start the union find process
+        int[] arrOfRoots = new int[n];
+
+        // Loop through each current city
+        for (int i = 0; i < n; i++) {
+            // Make each city its own root for now
+            arrOfRoots[i] = i;
+        }
+
+        // Variables for highways built
+        long highwaysBuilt = 0;
+
+        // Correct all the roots (setup for cluster finding)
+        for (int i = 0; i < cities.length; i++) {
+            // Get the start and the end
+
+            // Subtract 1 because the roots are set 1 less
+            int start = cities[i][0] - 1;
+            int end = cities[i][1] - 1;
+
+            // Call union function to connect the cities
+            unionFind (start, end, arrOfRoots);
+        }
+
+        // Count clusters
+        int clusters = 0;
+        for (int i = 0; i < n; i++) {
+            // If the root of the city is itself then that is one component
+            if (findParentRoot(i, arrOfRoots) == i) {
+                // Increment counter
+                clusters++;
+            }
+        }
+
+        // Return the total cost
+        return (long) clusters * hospitalCost + (long) (n-clusters) * highwayCost;
+    }
+
+    public static void unionFind (int start, int end, int[] arrOfRoots) {
+        // Call separate function to find root of the start
+        int rootStart = findParentRoot(start, arrOfRoots);
+
+        // Call function to find root of the end
+        int rootEnd = findParentRoot(end, arrOfRoots);
+
+        // If the roots aren't in the same cluster then merge them together
+        if (rootStart != rootEnd) {
+            // Merge one end to another
+            arrOfRoots[rootEnd] = rootStart;
+        }
+    }
+
+    public static int findParentRoot (int city, int[] arrOfRoots) {
+        // Start at city we want to find root for
+        int root = city;
+
+        // Is the current root pointing to itself
+        while (arrOfRoots[root] != root) {
+            // The new root becomes the parent of the current root
+            root = arrOfRoots[root];
+        }
+
+        // Execute the path compression so future iterations can be done faster
+
+        // Loop over all the cities we passed
+        while (city != root) {
+            // Save the current city's parent before changing it
+            int parent = arrOfRoots[city];
+
+            // Set the city to point directly to the root
+            arrOfRoots[city] = root;
+
+            // Move up the ladder
+            city = parent;
+        }
+
+        return root;
+    }
+
+
+    public static int bfs(List<List<Integer>> adjacencyGraph, int start, boolean visited) {
+        // Make the queue
+
+        // Set the city count to 0
+
+        // Add the start city to the queue
+
+        // Set it's visited to true
+
+        // Increment the city counter
+
+        // While the queue isn't empty
+
+            // Poll the first city
+
+            // Loop through the neighbors of the adjacent cities
+
+                // Check if you haven't visited the neighbor
+
+                    // Set the neighbor's visited to true
+
+                    // Add the neighbor to the queue
+
+                    // Increment the city count
+
+        // Return the city count
+
+        return -1;
+    }
+
+    // Old Code
+
+    /*
+    // For each city have a list of its neighbors for easy access
         List<List<Integer>> adjacencyGraph= new ArrayList<>();
 
         // Loop through each city and add an empty list for each city
@@ -64,35 +177,5 @@ public class HighwaysAndHospitals {
         }
 
         return 0;
-    }
-
-    public static int bfs(List<List<Integer>> adjacencyGraph, int start, boolean visited) {
-        // Make the queue
-
-        // Set the city count to 0
-
-        // Add the start city to the queue
-
-        // Set it's visited to true
-
-        // Increment the city counter
-
-        // While the queue isn't empty
-
-            // Poll the first city
-
-            // Loop through the neighbors of the adjacent cities
-
-                // Check if you haven't visited the neighbor
-
-                    // Set the neighbor's visited to true
-
-                    // Add the neighbor to the queue
-
-                    // Increment the city count
-
-        // Return the city count
-
-        return -1;
-    }
+     */
 }
