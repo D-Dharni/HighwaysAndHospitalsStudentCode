@@ -33,6 +33,9 @@ public class HighwaysAndHospitals {
         for (int i = 0; i < n; i++) {
             // Make each city its own root for now
             arrOfRoots[i] = i;
+
+            // Make every order of city one that way it represents the initial root
+            orderOfCities[i] = 1;
         }
 
         // Variables for highways built
